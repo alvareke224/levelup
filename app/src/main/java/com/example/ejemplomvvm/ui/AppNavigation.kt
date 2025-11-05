@@ -17,6 +17,7 @@ import com.example.ejemplomvvm.ui.cart.CartViewModel
 import com.example.ejemplomvvm.ui.checkout.CheckoutScreen
 import com.example.ejemplomvvm.ui.checkout.ReceiptScreen
 import com.example.ejemplomvvm.ui.history.HistoryScreen
+import com.example.ejemplomvvm.ui.home.HomeScreen
 import com.example.ejemplomvvm.ui.product.ProductScreen
 import com.example.ejemplomvvm.ui.profile.ProfileScreen
 
@@ -26,7 +27,14 @@ fun AppNavigation() {
     val cartViewModel: CartViewModel = viewModel()
     val sessionViewModel: SessionViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = "products") {
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            HomeScreen(
+                onExploreCatalog = { navController.navigate("products") },
+                onLogin = { navController.navigate("auth") }
+            )
+        }
+
         composable("products") {
             val currentUser by sessionViewModel.currentUser.collectAsState()
             ProductScreen(
@@ -86,7 +94,7 @@ fun AppNavigation() {
                 currentUser = currentUser,
                 onNavigateToHome = {
                     cartViewModel.clearCart()
-                    navController.popBackStack(route = "products", inclusive = false)
+                    navController.popBackStack(route = "home", inclusive = false)
                 }
             )
         }
