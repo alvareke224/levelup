@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Este array está aquí para forzar la generación de R.array -->
+    <string-array name="dummy_array_for_font_certs">
+        <item>ignore</item>
+    </string-array>
+</resources>
