@@ -1,12 +1,12 @@
 package com.example.ejemplomvvm.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.ejemplomvvm.data.Purchase
 import com.example.ejemplomvvm.data.UserRepository
 import com.example.ejemplomvvm.ui.auth.AuthScreen
@@ -20,18 +20,33 @@ import com.example.ejemplomvvm.ui.history.HistoryScreen
 import com.example.ejemplomvvm.ui.home.HomeScreen
 import com.example.ejemplomvvm.ui.product.ProductScreen
 import com.example.ejemplomvvm.ui.profile.ProfileScreen
+import com.example.ejemplomvvm.ui.SessionViewModel
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation() {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val cartViewModel: CartViewModel = viewModel()
     val sessionViewModel: SessionViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = "home") {
+    AnimatedNavHost(
+        navController = navController, 
+        startDestination = "home",
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) }
+    ) {
         composable("home") {
+            val currentUser by sessionViewModel.currentUser.collectAsState()
             HomeScreen(
+                currentUser = currentUser,
                 onExploreCatalog = { navController.navigate("products") },
-                onLogin = { navController.navigate("auth") }
+                onLogin = { navController.navigate("auth") },
+                onNavigateToProfile = { navController.navigate("profile") }
             )
         }
 
