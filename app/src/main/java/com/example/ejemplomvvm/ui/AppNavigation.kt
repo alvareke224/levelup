@@ -20,6 +20,7 @@ import com.example.ejemplomvvm.ui.history.HistoryScreen
 import com.example.ejemplomvvm.ui.home.HomeScreen
 import com.example.ejemplomvvm.ui.product.ProductScreen
 import com.example.ejemplomvvm.ui.profile.ProfileScreen
+import com.example.ejemplomvvm.ui.promotions.PromotionsScreen
 import com.example.ejemplomvvm.ui.SessionViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -46,8 +47,13 @@ fun AppNavigation() {
                 currentUser = currentUser,
                 onExploreCatalog = { navController.navigate("products") },
                 onLogin = { navController.navigate("auth") },
-                onNavigateToProfile = { navController.navigate("profile") }
+                onNavigateToProfile = { navController.navigate("profile") },
+                onNavigateToPromotions = { navController.navigate("promotions") }
             )
+        }
+
+        composable("promotions") {
+            PromotionsScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable("products") {

@@ -28,7 +28,8 @@ fun HomeScreen(
     currentUser: User?,
     onExploreCatalog: () -> Unit,
     onLogin: () -> Unit,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToPromotions: () -> Unit
 ) {
     Scaffold {
         Column(
@@ -54,10 +55,6 @@ fun HomeScreen(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = onExploreCatalog) {
-                Text("Explorar catálogo")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
             if (currentUser == null) {
                 Button(onClick = onLogin) {
                     Text("Login")
@@ -66,6 +63,14 @@ fun HomeScreen(
                 Button(onClick = onNavigateToProfile) {
                     Text("Mi Perfil")
                 }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onExploreCatalog) {
+                Text("Explorar catálogo")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onNavigateToPromotions) {
+                Text("Promociones")
             }
         }
     }
