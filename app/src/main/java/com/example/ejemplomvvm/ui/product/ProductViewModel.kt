@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ProductViewModel : ViewModel() {
     // Ahora se suscribe al StateFlow del repositorio
@@ -19,6 +20,12 @@ class ProductViewModel : ViewModel() {
 
     private val _selectedCategory = MutableStateFlow<Category?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            ProductRepository.fetchProductsFromGist()
+        }
+    }
 
     val filteredProducts = combine(_searchText, _selectedCategory, _allProducts) { text, category, products ->
         val textFiltered = if (text.isBlank()) {
