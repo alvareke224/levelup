@@ -29,7 +29,8 @@ fun HomeScreen(
     onExploreCatalog: () -> Unit,
     onLogin: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onNavigateToPromotions: () -> Unit
+    onNavigateToPromotions: () -> Unit,
+    onNavigateToLocation: () -> Unit
 ) {
     Scaffold {
         Column(
@@ -71,6 +72,10 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onNavigateToPromotions) {
                 Text("Promociones")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onNavigateToLocation) {
+                Text("Visítanos")
             }
         }
     }

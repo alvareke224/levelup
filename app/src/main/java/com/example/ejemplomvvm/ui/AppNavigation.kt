@@ -18,6 +18,7 @@ import com.example.ejemplomvvm.ui.checkout.CheckoutScreen
 import com.example.ejemplomvvm.ui.checkout.ReceiptScreen
 import com.example.ejemplomvvm.ui.history.HistoryScreen
 import com.example.ejemplomvvm.ui.home.HomeScreen
+import com.example.ejemplomvvm.ui.location.LocationScreen
 import com.example.ejemplomvvm.ui.product.ProductScreen
 import com.example.ejemplomvvm.ui.profile.ProfileScreen
 import com.example.ejemplomvvm.ui.promotions.PromotionsScreen
@@ -48,8 +49,13 @@ fun AppNavigation() {
                 onExploreCatalog = { navController.navigate("products") },
                 onLogin = { navController.navigate("auth") },
                 onNavigateToProfile = { navController.navigate("profile") },
-                onNavigateToPromotions = { navController.navigate("promotions") }
+                onNavigateToPromotions = { navController.navigate("promotions") },
+                onNavigateToLocation = { navController.navigate("location") }
             )
+        }
+
+        composable("location") {
+            LocationScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable("promotions") {
