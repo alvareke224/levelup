@@ -1,20 +1,27 @@
 package com.example.ejemplomvvm.ui.checkout
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.ejemplomvvm.data.services.LocationService
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,8 +45,28 @@ fun CheckoutScreen(
             address.isNotBlank() && city.isNotBlank() &&
             cardName.isNotBlank() &&
             cardNumber.length == 16 &&
-            expiryDate.length == 4 && // Se valida el texto real (4 dígitos)
+            expiryDate.length == 4 &&
             cvv.length == 3
+        }
+    }
+
+    val context = LocalContext.current
+    val locationService = remember { LocationService(context) }
+    val scope = rememberCoroutineScope()
+
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)) {
+            scope.launch {
+                locationService.getCurrentLocationAddress().collect { locationAddress ->
+                    locationAddress?.let {
+                        address = it.thoroughfare ?: ""
+                        city = it.locality ?: ""
+                    }
+                }
+            }
         }
     }
 
@@ -72,7 +99,23 @@ fun CheckoutScreen(
 
             Text("Datos de Domicilio", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Dirección") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(
+                value = address,
+                onValueChange = { address = it },
+                label = { Text("Dirección") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = {
+                        val permissionsToRequest = arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                        locationPermissionLauncher.launch(permissionsToRequest)
+                    }) {
+                        Icon(Icons.Default.MyLocation, contentDescription = "Usar mi ubicación")
+                    }
+                }
+            )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("Ciudad") }, modifier = Modifier.fillMaxWidth())
 

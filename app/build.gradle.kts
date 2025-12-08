@@ -71,6 +71,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:0.36.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // ViewModel integration with Navigation3 //a veces da problemas
     //implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0-beta01")
